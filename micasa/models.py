@@ -5,8 +5,8 @@ from django.dispatch import receiver
 from pyuploadcare.dj.models import ImageField
 
 # Create your models here.
-class Location(models.Model):
-    locations = (
+class Hood(models.Model):
+        locations = (
         ('Nairobi', 'Nairobi'),
         ('Kiambu', 'Kiambu'),
         ('Eastlands', 'Eastlands'),
@@ -32,59 +32,34 @@ class Location(models.Model):
         ('Sparta', 'Sparta'),
         ('Mombasa', 'Mombasa'),        
     )
-    name = models.CharField(max_length=65, choices=locations)
-
-
-
-    def save_loc(self):
-        self.save()
-
-    def delete_loc(self):
-        self.delete()
-
-
-    def __str__(self):
-        return self.name
-
-
-
-class Category(models.Model):
-    name = models.CharField(max_length=30)
-
-    def __str__(self):
-        return self.name
-
-
-
-class Hood(models.Model):
-    name = models.CharField(max_length=50)
-    image = ImageField()
-    occupants = models.CharField(max_length=50)
-    location = models.ForeignKey(Location)
-    created_on = models.DateTimeField(auto_now_add=True, null=True)
+        name = models.CharField(max_length=50)
+        image = ImageField()
+        occupants = models.CharField(max_length=50)
+        location_name = models.CharField(max_length=65, choices=locations)
+        created_on = models.DateTimeField(auto_now_add=True, null=True)
 
 
 
 
-    class Meta:
-        ordering = ['-pk']
+        class Meta:
+            ordering = ['-pk']
 
-    def save_hood(self):
-        self.save()
-
-
-    def delete_hood(self):
-        self.delete()
+        def save_hood(self):
+            self.save()
 
 
-    @classmethod
-    def search_hood(cls, search_term):
-        hood = Hood.objects.filter(name__icontains=search_term)
-        return hood
+        def delete_hood(self):
+            self.delete()
 
 
-    def __str__(self):
-        return self.name
+        @classmethod
+        def search_hood(cls, search_term):
+            hood = Hood.objects.filter(name__icontains=search_term)
+            return hood
+
+
+        def __str__(self):
+            return self.name
 
 
 
@@ -120,7 +95,7 @@ class Business(models.Model):
     owner = models.ForeignKey(User)
     hood = models.ForeignKey(Hood)
     address = models.CharField(max_length=50)
-    category = models.ForeignKey(Category)
+    category = models.CharField(max_length=30)
 
     def __str__(self):
         return self.business_name
