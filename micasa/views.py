@@ -13,7 +13,12 @@ def home(request):
     hoods = Hood.objects.all()
     return render(request,'home.html',locals())
 
+def filter_location(request):
+    locations = Location.objects.all()
+    location = request.GET.get("location")
 
+    searched_image = Hood.filter_by_location(location)
+    message = f"{location}"
 
     return render(request,'category/location.html', {"message":message,"location":searched_image, "locations":locations})    
 
@@ -125,6 +130,22 @@ def upload_business(request):
         businessform = BusinessForm()
     return render(request,'business.html',locals())  
 
+
+def search_category(request):
+    location = Location.objects.all()
+    category = Category.objects.all()
+    if 'Category' in request.GET and request.GET["Category"]:
+        category = request.GET.get("Category")
+        searched_business = Business.search_by_category(category)
+        message = f"{category}"
+
+        return render(request,'search_business.html', {"message":message,"Category":searched_business})
+
+    else:
+        message = "You haven't searched for anything"
+        return render(request,'search_business.html',{"message":message})
+    
+    
 
 
 # Post view
